@@ -1,0 +1,346 @@
+# AI Legal Research Assistant - Day 1 Notes
+
+## Objective
+
+Set up the development environment and connect a Node.js application to MongoDB Atlas using Mongoose.
+
+---
+
+## Technologies Used
+
+* Node.js
+* npm
+* MongoDB Atlas
+* MongoDB Driver
+* Mongoose
+* dotenv
+* VS Code
+
+---
+
+## Project Setup
+
+### Create Project Folder
+
+```bash
+mkdir "AI legal research assistant"
+cd "AI legal research assistant"
+```
+
+### Initialize Node Project
+
+```bash
+npm init -y
+```
+
+This creates:
+
+```text
+package.json
+```
+
+---
+
+## Installing Dependencies
+
+### Install Mongoose
+
+```bash
+npm install mongoose
+```
+
+Purpose:
+
+* Connect Node.js application to MongoDB.
+* Create schemas and models.
+
+### Install dotenv
+
+```bash
+npm install dotenv
+```
+
+Purpose:
+
+* Store sensitive information outside source code.
+* Load environment variables from .env file.
+
+---
+
+## MongoDB Atlas Setup
+
+### Steps
+
+1. Create MongoDB Atlas account.
+2. Create a free cluster.
+3. Create database user.
+4. Configure Network Access.
+5. Obtain connection string.
+
+### Network Access
+
+Added:
+
+```text
+Current IPv4 Address
+```
+
+Also tested:
+
+```text
+0.0.0.0/0
+```
+
+for troubleshooting.
+
+Purpose:
+
+* Allow Atlas to accept connections from local machine.
+
+---
+
+## Environment Variables
+
+Created:
+
+```text
+.env
+```
+
+Example:
+
+```env
+MONGO_URI=your_connection_string
+```
+
+Purpose:
+
+* Store database credentials securely.
+
+---
+
+## Loading Environment Variables
+
+```javascript
+require('dotenv').config();
+```
+
+Explanation:
+
+dotenv reads the .env file and loads variables into:
+
+```javascript
+process.env
+```
+
+Example:
+
+```javascript
+process.env.MONGO_URI
+```
+
+---
+
+## Connecting to MongoDB
+
+```javascript
+const mongoose = require('mongoose');
+
+mongoose.connect(process.env.MONGO_URI)
+.then(() => {
+    console.log("Database connected successfully");
+})
+.catch((err) => {
+    console.log(err);
+});
+```
+
+---
+
+## Promise Concepts Learned
+
+### Wrong
+
+```javascript
+.then(console.log("Connected"))
+```
+
+Problem:
+
+```javascript
+console.log()
+```
+
+runs immediately.
+
+---
+
+### Correct
+
+```javascript
+.then(() => {
+    console.log("Connected");
+})
+```
+
+Explanation:
+
+Code executes only after successful connection.
+
+---
+
+## Important Concepts
+
+### require()
+
+Imports a package.
+
+Example:
+
+```javascript
+const mongoose = require('mongoose');
+```
+
+---
+
+### process.env
+
+Stores environment variables.
+
+Example:
+
+```javascript
+process.env.MONGO_URI
+```
+
+---
+
+### Promise
+
+Represents an asynchronous operation.
+
+Methods:
+
+```javascript
+.then()
+.catch()
+```
+
+---
+
+## Major Issue Faced
+
+Error:
+
+```text
+querySrv ECONNREFUSED
+```
+
+Reason:
+
+Using MongoDB SRV connection string:
+
+```text
+mongodb+srv://
+```
+
+Node.js failed during SRV DNS lookup.
+
+---
+
+## Troubleshooting Performed
+
+### Checked DNS
+
+```bash
+nslookup cluster0.tphn1ug.mongodb.net
+```
+
+### Checked SRV Records
+
+```bash
+nslookup -type=SRV _mongodb._tcp.cluster0.tphn1ug.mongodb.net
+```
+
+Result:
+
+* DNS working.
+* Atlas cluster reachable.
+
+---
+
+## Final Fix
+
+Instead of:
+
+```text
+mongodb+srv://
+```
+
+Used:
+
+```text
+mongodb://
+```
+
+standard connection string from Atlas.
+
+Result:
+
+```text
+Database connected successfully
+```
+
+---
+
+## Interview Questions
+
+### What is dotenv?
+
+A package used to load environment variables from a .env file into process.env.
+
+---
+
+### Why use .env files?
+
+To avoid hardcoding sensitive information such as:
+
+* Database passwords
+* API keys
+* JWT secrets
+
+---
+
+### What is Mongoose?
+
+An ODM (Object Data Modeling) library for MongoDB and Node.js.
+
+Features:
+
+* Schema validation
+* Models
+* Querying database
+
+---
+
+### What is process.env?
+
+An object that contains environment variables available to the Node.js application.
+
+---
+
+### What is the difference between .then() and .catch()?
+
+.then()
+
+* Executes when promise succeeds.
+
+.catch()
+
+* Executes when promise fails.
+
+---
+
+### What problem did you solve today?
+
+Configured MongoDB Atlas, connected a Node.js application using Mongoose, debugged DNS/SRV connection issues, and successfully established a database connection using a standard MongoDB connection string.
