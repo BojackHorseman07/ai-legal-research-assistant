@@ -1,0 +1,416 @@
+# AI Legal Research Assistant - Day 2 Notes
+
+## Objective
+
+Build the authentication foundation of the application using Express, MongoDB Atlas, Mongoose, bcrypt, Git, and GitHub.
+
+---
+
+# Project Structure
+
+Created the following folders:
+
+```text
+controllers/
+models/
+routes/
+```
+
+Purpose:
+
+* models → Database schemas
+* controllers → Business logic
+* routes → API endpoints
+
+---
+
+# User Model
+
+Created:
+
+```text
+models/User.js
+```
+
+Schema:
+
+```javascript
+const userSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    password: String
+});
+```
+
+Concept Learned:
+
+A schema defines the structure of documents stored in MongoDB.
+
+---
+
+# Controller
+
+Created:
+
+```text
+controllers/authController.js
+```
+
+Purpose:
+
+Handles user registration logic.
+
+Workflow:
+
+```text
+Receive request
+↓
+Extract data from req.body
+↓
+Create User object
+↓
+Save user to MongoDB
+↓
+Return response
+```
+
+---
+
+# Route
+
+Created:
+
+```text
+routes/authRoutes.js
+```
+
+Example:
+
+```javascript
+router.post('/register', register);
+```
+
+Concept Learned:
+
+A route maps an HTTP request to a controller function.
+
+---
+
+# Express Middleware
+
+Added:
+
+```javascript
+app.use(express.json());
+```
+
+Purpose:
+
+Allows Express to read JSON data sent from clients.
+
+Without it:
+
+```javascript
+req.body
+```
+
+would be undefined.
+
+---
+
+# REST API
+
+Created first API endpoint:
+
+```http
+POST /register
+```
+
+Request:
+
+```json
+{
+  "name":"Abhijith",
+  "email":"abhi@gmail.com",
+  "password":"123456"
+}
+```
+
+Response:
+
+```json
+{
+  "message":"User registered successfully"
+}
+```
+
+Concept Learned:
+
+A REST API allows applications to communicate using HTTP methods such as:
+
+```text
+GET
+POST
+PUT
+DELETE
+```
+
+---
+
+# Thunder Client
+
+Installed Thunder Client VS Code extension.
+
+Purpose:
+
+Test APIs without creating a frontend.
+
+Used:
+
+```http
+POST http://localhost:5000/register
+```
+
+to test registration.
+
+---
+
+# MongoDB Verification
+
+Verified in Atlas:
+
+```text
+Database
+↓
+Browse Collections
+↓
+users collection
+```
+
+User document successfully stored.
+
+---
+
+# Password Hashing
+
+Installed:
+
+```bash
+npm install bcryptjs
+```
+
+Added:
+
+```javascript
+const bcrypt = require('bcryptjs');
+```
+
+Hashed password:
+
+```javascript
+const hashedPassword = await bcrypt.hash(password, 10);
+```
+
+Stored:
+
+```text
+$2b$10$...
+```
+
+instead of:
+
+```text
+123456
+```
+
+Concept Learned:
+
+Passwords should never be stored in plain text.
+
+---
+
+# bcrypt Concepts
+
+Hashing:
+
+```javascript
+bcrypt.hash(password, 10);
+```
+
+Verification:
+
+```javascript
+bcrypt.compare(password, hashedPassword);
+```
+
+Salt Rounds:
+
+```javascript
+10
+```
+
+Meaning:
+
+Higher value = More secure but slower.
+
+---
+
+# Git
+
+Initialized repository:
+
+```bash
+git init
+```
+
+Checked status:
+
+```bash
+git status
+```
+
+Added files:
+
+```bash
+git add .
+```
+
+Created first commit:
+
+```bash
+git commit -m "Initial backend setup with registration API and password hashing"
+```
+
+Concept Learned:
+
+A commit is a snapshot of project files at a specific point in time.
+
+---
+
+# GitHub
+
+Created repository:
+
+```text
+ai-legal-research-assistant
+```
+
+Connected local repository:
+
+```bash
+git remote add origin https://github.com/BojackHorseman07/ai-legal-research-assistant.git
+```
+
+Changed branch:
+
+```bash
+git branch -M main
+```
+
+Pushed project:
+
+```bash
+git push -u origin main
+```
+
+Concept Learned:
+
+Git = Local version control
+
+GitHub = Remote repository hosting service
+
+---
+
+# Important Security Practice
+
+Created:
+
+```text
+.gitignore
+```
+
+Contents:
+
+```text
+node_modules/
+.env
+```
+
+Purpose:
+
+Prevent uploading:
+
+* MongoDB credentials
+* Passwords
+* Large dependency folders
+
+---
+
+# Interview Questions
+
+## What is Express?
+
+Express is a lightweight web framework for Node.js used to create web applications and REST APIs.
+
+---
+
+## What is a Route?
+
+A route defines how an application responds to a specific HTTP request.
+
+Example:
+
+```javascript
+router.post('/register', register);
+```
+
+---
+
+## What is a Controller?
+
+A controller contains business logic executed when a route is called.
+
+---
+
+## What is bcrypt?
+
+bcrypt is a password hashing library used to securely store passwords.
+
+---
+
+## What is Git?
+
+Git is a distributed version control system used to track source code changes.
+
+---
+
+## What is GitHub?
+
+GitHub is a cloud platform for hosting Git repositories and collaborating on projects.
+
+---
+
+# Progress
+
+Completed:
+
+```text
+Environment Setup      ✅
+MongoDB Atlas          ✅
+Mongoose               ✅
+Express                ✅
+User Schema            ✅
+Register API           ✅
+Password Hashing       ✅
+Git                    ✅
+GitHub                 ✅
+```
+
+Next:
+
+```text
+Login API
+JWT Authentication
+Protected Routes
+```
+
