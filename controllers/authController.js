@@ -61,5 +61,24 @@ return res.status(200).json({
     token
 });
 };
+const getProfile = async (req, res) => {
 
-module.exports = { register,login };
+    try {
+
+        const user = await User.findById(req.user.userId);
+
+        return res.status(200).json({
+            name: user.name,
+            email: user.email
+        });
+
+    } catch (error) {
+
+        return res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+};
+module.exports = { register,login,getProfile };
