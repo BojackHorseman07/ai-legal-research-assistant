@@ -1,0 +1,206 @@
+# AI Legal Research Assistant - DAY 3 Notes
+
+## Objective
+
+Implement Login API and JWT Authentication.
+
+---
+
+## Packages Used
+
+```bash
+npm install jsonwebtoken
+```
+
+Purpose:
+
+* Generate JWT tokens
+* Authenticate users after login
+
+---
+
+## Environment Variable
+
+Added:
+
+```env
+JWT_SECRET=mysecretkey007
+```
+
+Purpose:
+
+* Secret key used to sign and verify JWT tokens.
+
+---
+
+## Login API
+
+Endpoint:
+
+```http
+POST /login
+```
+
+Purpose:
+
+Authenticate existing users.
+
+---
+
+## Login Flow
+
+```text
+Receive Email & Password
+        ↓
+Find User in MongoDB
+        ↓
+Check User Exists
+        ↓
+bcrypt.compare()
+        ↓
+Generate JWT Token
+        ↓
+Return Token
+```
+
+---
+
+## User Lookup
+
+```javascript
+const user = await User.findOne({ email });
+```
+
+Purpose:
+
+Find user using email.
+
+---
+
+## Password Verification
+
+```javascript
+bcrypt.compare(
+    password,
+    user.password
+);
+```
+
+Purpose:
+
+Compare entered password with hashed password stored in database.
+
+---
+
+## JWT Generation
+
+```javascript
+const token = jwt.sign(
+    {
+        userId: user._id
+    },
+    process.env.JWT_SECRET,
+    {
+        expiresIn: '1h'
+    }
+);
+```
+
+Purpose:
+
+Generate authentication token after successful login.
+
+---
+
+## Login Response
+
+```json
+{
+  "message": "Login successful",
+  "token": "..."
+}
+```
+
+---
+
+## Routes
+
+```javascript
+router.post('/register', register);
+router.post('/login', login);
+```
+
+---
+
+## Thunder Client Testing
+
+Tested:
+
+```http
+POST /register
+POST /login
+```
+
+Successfully received JWT token.
+
+---
+
+## Git Commit
+
+```bash
+git commit -m "day3 login authentication"
+```
+
+---
+
+## Interview Questions
+
+### What is JWT?
+
+JSON Web Token is a token-based authentication mechanism used to verify users.
+
+---
+
+### Why use JWT?
+
+* Stateless authentication
+* Secure
+* Common REST API practice
+
+---
+
+### What is bcrypt?
+
+A password hashing library used to securely store passwords.
+
+---
+
+### Difference between bcrypt.hash() and bcrypt.compare()?
+
+```javascript
+bcrypt.hash()
+```
+
+Creates hash.
+
+```javascript
+bcrypt.compare()
+```
+
+Verifies password.
+
+---
+
+### Explain Login Flow
+
+```text
+Email & Password
+       ↓
+User Lookup
+       ↓
+Password Verification
+       ↓
+JWT Generation
+       ↓
+Token Returned
+```

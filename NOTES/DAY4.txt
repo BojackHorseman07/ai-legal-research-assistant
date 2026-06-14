@@ -1,0 +1,325 @@
+# AI Legal Research Assistant - DAY 4 Notes
+
+## Objective
+
+Implement JWT Middleware and Protected Routes.
+
+---
+
+## JWT Middleware
+
+Created:
+
+```text
+middleware/authMiddleware.js
+```
+
+Purpose:
+
+Protect routes using JWT verification.
+
+---
+
+## Middleware Flow
+
+```text
+Request
+   ↓
+Read Authorization Header
+   ↓
+Check Token Exists
+   ↓
+Extract Token
+   ↓
+Verify JWT
+   ↓
+Attach User to req.user
+   ↓
+next()
+```
+
+---
+
+## Reading Authorization Header
+
+```javascript
+const authHeader = req.headers.authorization;
+```
+
+Purpose:
+
+Read JWT token from request.
+
+---
+
+## No Token Check
+
+```javascript
+if (!authHeader) {
+    return res.status(401).json({
+        message: "Access denied. No token provided."
+    });
+}
+```
+
+Purpose:
+
+Reject unauthenticated users.
+
+---
+
+## Extract Token
+
+```javascript
+const token = authHeader.split(' ')[1];
+```
+
+Example:
+
+```text
+Bearer eyJhbGc...
+```
+
+Extracts:
+
+```text
+eyJhbGc...
+```
+
+---
+
+## Verify JWT
+
+```javascript
+const decoded = jwt.verify(
+    token,
+    process.env.JWT_SECRET
+);
+```
+
+Purpose:
+
+Verify token authenticity.
+
+---
+
+## Attach User Information
+
+```javascript
+req.user = decoded;
+```
+
+Purpose:
+
+Make authenticated user information available to controllers.
+
+---
+
+## Continue Request
+
+```javascript
+next();
+```
+
+Purpose:
+
+Allow request to proceed.
+
+---
+
+## Error Handling
+
+```javascript
+try {
+
+}
+catch(error){
+
+}
+```
+
+Purpose:
+
+Handle:
+
+* Expired token
+* Invalid token
+* Tampered token
+
+---
+
+## Protected Route
+
+Created:
+
+```http
+GET /profile
+```
+
+Route:
+
+```javascript
+router.get(
+    '/profile',
+    authMiddleware,
+    getProfile
+);
+```
+
+Purpose:
+
+Allow only authenticated users.
+
+---
+
+## Profile Controller
+
+Initial Version
+
+```javascript
+return res.status(200).json({
+    user: req.user
+});
+```
+
+Used to test middleware.
+
+---
+
+## Final Version
+
+```javascript
+const user = await User.findById(
+    req.user.userId
+);
+```
+
+Returned:
+
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com"
+}
+```
+
+---
+
+## Authentication Architecture
+
+```text
+POST /register
+        ↓
+Hash Password
+        ↓
+Store User
+
+POST /login
+        ↓
+Verify Password
+        ↓
+Generate JWT
+
+GET /profile
+        ↓
+Authorization Header
+        ↓
+JWT Middleware
+        ↓
+jwt.verify()
+        ↓
+req.user
+        ↓
+MongoDB Query
+        ↓
+Return Profile
+```
+
+---
+
+## Git Commit
+
+```bash
+git commit -m "Implement JWT middleware and protected profile route"
+```
+
+Commit:
+
+```text
+640ba64
+```
+
+---
+
+## Interview Questions
+
+### What is Middleware?
+
+A function that executes between the request and response cycle.
+
+---
+
+### Why use Authentication Middleware?
+
+To protect routes and verify users before granting access.
+
+---
+
+### What is an Authorization Header?
+
+```text
+Authorization: Bearer <token>
+```
+
+Used to send JWT tokens.
+
+---
+
+### What does jwt.verify() do?
+
+Verifies whether a token was signed using the correct secret key.
+
+---
+
+### What is req.user?
+
+A custom property used to store authenticated user information.
+
+---
+
+### Difference between Authentication and Authorization?
+
+Authentication:
+
+```text
+Who are you?
+```
+
+Authorization:
+
+```text
+What are you allowed to access?
+```
+
+---
+
+## Current Project Status
+
+```text
+MongoDB Atlas                 ✅
+Express                       ✅
+Mongoose                      ✅
+
+Register API                  ✅
+Password Hashing              ✅
+
+Login API                     ✅
+JWT Generation                ✅
+
+JWT Middleware                ✅
+Protected Routes              ✅
+Profile Endpoint              ✅
+
+Next:
+PDF Upload System (multer)
+```
