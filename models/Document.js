@@ -20,6 +20,10 @@ const documentSchema = new mongoose.Schema({
  uploadDate: {
   type: Date,
   default: Date.now
+ },
+  extractedText: {
+  type: String,
+  required: true
  }
 });
 const Document = mongoose.model("Document", documentSchema);
